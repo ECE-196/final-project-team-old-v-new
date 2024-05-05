@@ -1,6 +1,9 @@
 from __future__ import annotations
 from threading import Thread, Lock
 from bluetoothESP import scan_and_connect
+from bluetoothESP import read_data 
+from bluetoothESP import send_data 
+from bluetoothESP import SERVICE 
 import asyncio
 
 import sys
@@ -38,7 +41,7 @@ class App(tk.Tk):
         self.output = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         self.calibratedOutput = [0.0, 1.0, 2.0]
 
-        self.checkButton = tk.Checkbutton(self, text="Connect to Bluetooth",  variable=self.connectblue, onvalue=1, offvalue=0,command=lambda : self.toggle_bluetooth(self.connectblue))
+        self.checkButton = tk.Checkbutton(self, text="Connect to Bluetooth",  variable=self.connectblue, command=lambda : self.toggle_bluetooth(self.connectblue))
         self.checkButton.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
         ttk.Button(self, text='calibrate', command=self.update_calibration).pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
         self.display = tk.Text(self, height=5, width=80, state=tk.DISABLED)
@@ -86,7 +89,7 @@ class App(tk.Tk):
                 if (result):
                     return
                 else:
-                    self.connectblue = 0
+                    self.connectblue.set(0)  
            
             
             else:
@@ -108,6 +111,13 @@ class App(tk.Tk):
             self.display.insert(tk.END, self.output)  
             self.display.config(state=tk.DISABLED)
             self.after(1000,self.update_text)  
+            
+            
+    @detached_callback
+    def read_data(self):
+        with self._lock:
+            return
+            
     
     @detached_callback
     def update_output(self):

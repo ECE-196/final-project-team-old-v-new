@@ -5,7 +5,8 @@ import numpy
 
 CHARACTERISTIC_UUID = "19b10011-e8f2-537e-4f6c-d104768a1214"  # Replace with your characteristic UUID
 ACCELEROMETER_UUID = "19b10011-e8f2-537e-4f6c-d104768a1215"
-DEVICE_NAME = "Aether's LED"  # Replace with your device's name
+DEVICE_NAME = "SnowboardSensorFront"  # Replace with your device's name
+SERVICE = 0
 
 async def send_data(client, value):
     await client.write_gatt_char(CHARACTERISTIC_UUID, bytearray([value]), response=True)
@@ -17,8 +18,10 @@ async def read_data(client):
         value = struct.unpack('6f', bytesRead)
         
         print(value)
+        return value
     except Exception as error:
         print("An error occurred: ", error)
+        return 0
 
     #print(f"Sensors read : {value}")
 
@@ -40,11 +43,11 @@ async def scan_and_connect():
     for device in devices:
         if device.name == DEVICE_NAME:
             print(f"Located target Device...")
-            async with BleakClient(device) as client:
+            async with leakClient(device, timeout=50.0) as client:
                 print(f"Connecting...")
                 print(f"Connected to device: {device.name}")
                 if(client.services):
-                    await read_data(client)
+                    service = 1
                 #await cycle_data(client)
                 return 1
         else:

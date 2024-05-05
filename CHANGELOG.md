@@ -22,3 +22,17 @@
 
 ### Removed
 ...
+
+## 5:20 5/04/2024
+### Contributors
+Bran Zhang
+
+### Added
+1. 
+    * Accel.ino
+### Changed
+1. 
+    * main.py & BluetoothESP.py
+
+### Removed
+N/A

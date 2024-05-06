@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 5/06/2024
+### Contributors
+Allen Keng
+### Added
+None
+### Changed
+1. 
+    * FinalProjectLinks.md - added our main google drive link
+    * Correction for who did what in changelog
+
+### Removed
+None
 
 ## 5/05/2024
 ### Contributors
@@ -38,18 +50,18 @@ N/A
 ### Added
 1. 
     * MAIN: Moved our temporary Github Repo Files over to here.
-    * Python code to connect to ESP32
-    * Images we use in website / design
-    * Our website index.md
-    * Our Arduino IDE ESP32 code
-    * Our old PCB board design
+    * Python code to connect to ESP32 (AK/BZ)
+    * Images we use in website / design (JM)
+    * Our website index.md  (AK/BZ)
+    * Our Arduino IDE ESP32 code (AK)
+    * Our old PCB board design (JM)
 2. 
-    * TeamPhoto Image
+    * TeamPhoto Image   (JM)
 ### Changed
 1. 
-    * Updated changelog. 
+    * Updated changelog.  (AK)
 2. 
-    * Index.md to show the General Outline/Layout of Website
+    * Index.md to show the General Outline/Layout of Website (AK)
 
 ### Removed
 ...

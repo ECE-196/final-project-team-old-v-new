@@ -1,4 +1,35 @@
 # CHANGELOG
+
+
+## 5/05/2024
+### Contributors
+Allen Keng
+### Added
+1. 
+    * FinalProjectLinks.md (replaces website links md)
+### Changed
+1. 
+    * Changelog ordering
+
+### Removed
+1. 
+    * website links md
+
+
+## 5:20 5/04/2024
+### Contributors
+Bran Zhang
+
+### Added
+1. 
+    * Accel.ino
+### Changed
+1. 
+    * main.py & BluetoothESP.py
+
+### Removed
+N/A
+
 ## 5/04/2024
 ### Contributors
 1. Allen Keng, John Mamola, Bran Zhang
@@ -22,17 +53,3 @@
 
 ### Removed
 ...
-
-## 5:20 5/04/2024
-### Contributors
-Bran Zhang
-
-### Added
-1. 
-    * Accel.ino
-### Changed
-1. 
-    * main.py & BluetoothESP.py
-
-### Removed
-N/A

@@ -1,9 +1,6 @@
 from __future__ import annotations
 from threading import Thread, Lock
-from bluetoothESP import scan_and_connect
-from bluetoothESP import read_data 
-from bluetoothESP import send_data 
-from bluetoothESP import SERVICE 
+from bluetoothESP import BLEAdapter
 import asyncio
 
 import sys
@@ -39,7 +36,12 @@ class App(tk.Tk):
         self.connectblue = tk.IntVar()
 
         self.output = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        self.parsedOutput = [0.0,0.0,0.0]
         self.calibratedOutput = [0.0, 1.0, 2.0]
+        self.currentTime = 0
+        self.gyroAngleX = 0
+        self.gyroAngleY = 0
+        self.yaw = 0.0
 
         self.checkButton = tk.Checkbutton(self, text="Connect to Bluetooth",  variable=self.connectblue, command=lambda : self.toggle_bluetooth(self.connectblue))
         self.checkButton.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
@@ -59,9 +61,8 @@ class App(tk.Tk):
         self.roll = tk.Label(self, text=self.toString("Roll", 2))
         self.roll.pack(side=tk.TOP, anchor = tk.W,  padx = 10, pady=10)
         
-        
-        #self.after(1000, self.update_output)
-        #self.after(1000, self.update_text)
+        self.adapter = BLEAdapter()
+        self.update_text()
         self.mainloop()
 
     @detached_callback
@@ -85,8 +86,9 @@ class App(tk.Tk):
         with self._lock:
             if self.connectblue.get()==1:
                 print(f"Creating Scanner Instance...") 
-                result = asyncio.run(scan_and_connect())
+                result = asyncio.run(self.adapter.scan_and_connect())
                 if (result):
+                    self.read()
                     return
                 else:
                     self.connectblue.set(0)  
@@ -99,6 +101,21 @@ class App(tk.Tk):
             return  
     
     @detached_callback
+    def read(self):
+        global data
+        with self._lock:
+            asyncio.run(self.adapter.read_data())
+            for i in range(len(self.adapter.data)):
+                self.output[i] = self.adapter.data[i]
+            self.ParseOutput()
+            self.after(500,self.read)  
+        return
+
+    @detached_callback
+    def write(self):
+        return
+
+    @detached_callback
     def disconnect_bluetooth(self):
         with self._lock:
             return
@@ -108,37 +125,27 @@ class App(tk.Tk):
         with self._lock:
             self.display.config(state=tk.NORMAL)  
             self.display.delete("1.0", tk.END)  
-            self.display.insert(tk.END, self.output)  
+            self.display.insert(tk.END, self.parsedOutput)  
             self.display.config(state=tk.DISABLED)
-            self.after(1000,self.update_text)  
-            
-            
-    @detached_callback
-    def read_data(self):
-        with self._lock:
-            return
+            self.after(500,self.update_text)  
             
     
-    @detached_callback
-    def update_output(self):
-        with self._lock:
-            print(self.output)
-            self.after(1000,self.update_output)  
-    
-    def ParseOutput():
+    def ParseOutput(self):
         result = []
-        AccX = output[0]
-        AccY = output[1]
-        AccZ = output[2]
-        GyroX = output[3]
-        GyroY = output[4]
-        GyroZ = output[5]
+        AccX = self.output[0]
+        AccY = self.output[1]
+        AccZ = self.output[2]
+        GyroX = self.output[3]
+        GyroY = self.output[4]
+        GyroZ = self.output[5]
         accAngleX = (math.atan(AccY / math.sqrt(pow(AccX, 2) + pow(AccZ, 2))) * 180 / math.pi) - 0.58
         accAngleY = (math.atan(-1 * AccX / math.sqrt(pow(AccY, 2) + pow(AccZ, 2))) * 180 / math.pi) + 1.58
-
-        previousTime = currentTime
-        currentTime = time.time()
-        elapsedTime = (currentTime - previousTime)  
+        
+        if (self.currentTime == 0):
+            self.currentTime = time.time()
+        previousTime = self.currentTime
+        self.currentTime = time.time()
+        elapsedTime = (self.currentTime - previousTime)  
         
         # Correct output with Error values
         GyroX = GyroX + 0.56
@@ -146,18 +153,18 @@ class App(tk.Tk):
         GyroZ = GyroZ + 0.79
 
         # Calculate gyro angles
-        gyroAngleX = gyroAngleX + GyroX * elapsedTime
-        gyroAngleY = gyroAngleY + GyroY * elapsedTime
-        yaw = yaw + GyroZ * elapsedTime
+        self.gyroAngleX = self.gyroAngleX + GyroX * elapsedTime
+        self.gyroAngleY = self.gyroAngleY + GyroY * elapsedTime
+        self.yaw += GyroZ * elapsedTime
 
         # Complementary filter - combine accelerometer and gyro angle values
         roll = 0.96 * gyroAngleX + 0.04 * accAngleX
         pitch = 0.96 * gyroAngleY + 0.04 * accAngleY
         
-        result.append(pitch)
-        result.append(raw)
-        result.append(row)
-        return result
+        self.parsedOutput[0] = pitch
+        self.parsedOutput[1] = yaw
+        self.parsedOutput[2] = roll
+        return
         
     def displayCalibration(self,window,sd,ac,px,py):
         window.pitch = tk.Label(window, text=self.toString("Pitch", 0))

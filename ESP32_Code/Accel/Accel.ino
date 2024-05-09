@@ -13,9 +13,9 @@
 
 BLEService sensorService("19b10010-e8f2-537e-4f6c-d104768a1214"); // create service
 
-BLEByteCharacteristic switchCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1214", BLERead | BLEWrite); // create characteristic
-BLECharacteristic sendSensorChars("19b10011-e8f2-537e-4f6c-d104768a1215", BLERead | BLENotify, NUMBYTESFROMACC);
-BLEByteCharacteristic calibrateCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1216", BLERead | BLEWrite); // Tell measurements to calibrate
+BLEByteCharacteristic switchCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1217", BLERead | BLEWrite); // create characteristic
+BLECharacteristic sendSensorChars("19b10011-e8f2-537e-4f6c-d104768a1218", BLERead | BLENotify, NUMBYTESFROMACC);
+BLEByteCharacteristic calibrateCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1219", BLERead | BLEWrite); // Tell measurements to calibrate
 
 uint8_t MPU6050_WHO_AM_I = 0x75;
 uint8_t MPU_ADDR = 0x68; // I2C address of the MPU-6050
@@ -28,7 +28,7 @@ byte byteArray[NUMBYTESFROMACC];
 
 void setup() {
   Serial.begin(115200);
-   Wire.begin(21, 22, 100000); // sda, scl, clock speed
+   Wire.begin(SDApin, SCLpin, 100000); // sda, scl, clock speed
    Wire.beginTransmission(MPU_ADDR);
    Wire.write(0x6B);  // PWR_MGMT_1 register
    Wire.write(0);     // set to zero (wakes up the MPU−6050)
@@ -45,7 +45,7 @@ void setup() {
   }
 
   // set advertised local name and service UUID
-  BLE.setLocalName("SnowboardSensorFront");
+  BLE.setLocalName("SnowboardSensorBack");
   BLE.setAdvertisedService(sensorService);
   BLE.setAdvertisingInterval(62);
 
@@ -71,27 +71,28 @@ void setup() {
 }
 
 void loop() {
-  
-   /*Wire.beginTransmission(MPU_ADDR);
-   Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
-   Wire.endTransmission(true);
-   Wire.beginTransmission(MPU_ADDR);*/
-  recordRegister();
-  float sensorValues[NUMVALUESFROMACC] = { 
-        // m/s^2
-        accl_X,
-        accl_Y, 
-        accl_Z, 
-        // Rotation - rad/s
-        GyX,
-        GyY, 
-        GyZ
-  };
-  for(int i = 0; i < NUMVALUESFROMACC; i++) {
-      memcpy(&byteArray[i * sizeof(float)], &sensorValues[i], sizeof(float));
-  }
       
-  sendSensorChars.writeValue(byteArray,sizeof(byteArray));
+  
+  BLEDevice central = BLE.central();
+  if (central){
+    while (central.connected()){
+      recordRegister();
+      float sensorValues[NUMVALUESFROMACC] = { 
+            // m/s^2
+            accl_X,
+            accl_Y, 
+            accl_Z, 
+            // Rotation - rad/s
+            GyX,
+            GyY, 
+            GyZ
+      };
+      for(int i = 0; i < NUMVALUESFROMACC; i++) {
+          memcpy(&byteArray[i * sizeof(float)], &sensorValues[i], sizeof(float));
+      }
+      sendSensorChars.writeValue(byteArray,sizeof(byteArray));
+    }
+  }
   /*Serial.print("| accl_X: ");
   Serial.print(accl_X);
   Serial.print(" g");

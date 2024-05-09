@@ -1,5 +1,22 @@
 # CHANGELOG
 
+
+## 5/09/2024
+### Contributors
+Allen Keng, Bran Zhang
+### Added
+1. 
+    * 
+### Changed
+1. 
+    * reconfigured python code to receive accelerometer output
+    * fixed bluetooth advertising bug arduino
+
+### Removed
+1. 
+
+
+
 ## 5/06/2024
 ### Contributors
 Allen Keng

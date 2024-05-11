@@ -11,7 +11,7 @@
 #define SCLpin  22    //IO 22 SCL
 #define Acc_Sensitivity 16384.00 
 
-BLEService sensorService("19b10010-e8f2-537e-4f6c-d104768a1214"); // create service
+BLEService sensorService("19b10010-e8f2-537e-4f6c-d104768a1220"); // create service
 
 BLEByteCharacteristic switchCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1217", BLERead | BLEWrite); // create characteristic
 BLECharacteristic sendSensorChars("19b10011-e8f2-537e-4f6c-d104768a1218", BLERead | BLENotify, NUMBYTESFROMACC);

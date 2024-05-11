@@ -11,6 +11,8 @@ import tkinter.ttk as ttk
 from threading import Thread, Lock
 from tkinter.messagebox import showerror
 
+LAMBDA = 10e-6
+
 def detached_callback(f):
     return lambda *args, **kwargs: Thread(target=f, args=args, kwargs=kwargs).start()
 
@@ -32,16 +34,16 @@ class App(tk.Tk):
         
         self.title("Snowboard")
         self.geometry("800x600")
-        self.calibration = []
+        self.calibration_F = []
+        self.calibration_B = []
         self.connectblue = tk.IntVar()
 
-        self.output = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        self.parsedOutput = [0.0,0.0,0.0]
-        self.calibratedOutput = [0.0, 1.0, 2.0]
-        self.currentTime = 0
-        self.gyroAngleX = 0
-        self.gyroAngleY = 0
-        self.yaw = 0.0
+        self.output_F = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        self.parsedOutput_F = [0.0,0.0,0.0]
+        self.calibratedOutput_F = [0.0, 0.0, 0.0]
+        self.output_B = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        self.parsedOutput_B = [0.0,0.0,0.0]
+        self.calibratedOutput_B = [0.0, 0.0, 0.0]
 
         self.checkButton = tk.Checkbutton(self, text="Connect to Bluetooth",  variable=self.connectblue, command=lambda : self.toggle_bluetooth(self.connectblue))
         self.checkButton.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
@@ -54,12 +56,10 @@ class App(tk.Tk):
         tk.Label(self, text="Display").pack(side=tk.BOTTOM, anchor=tk.W,padx=50)
         sys.stdout = ConsoleRedirector(self.console)
         
-        self.pitch = tk.Label(self,  text=self.toString("Pitch", 0))
-        self.pitch.pack(side=tk.TOP, anchor = tk.W, padx = 10, pady=10)
-        self.yaw = tk.Label(self, text=self.toString("Yaw", 1))
-        self.yaw.pack(side=tk.TOP, anchor = tk.W,  padx = 10, pady=10)
-        self.roll = tk.Label(self, text=self.toString("Roll", 2))
-        self.roll.pack(side=tk.TOP, anchor = tk.W,  padx = 10, pady=10)
+        self.front = tk.Label(self,  text=self.toString(0))
+        self.front.pack(side=tk.TOP, anchor = tk.W, padx = 10, pady=10)
+        self.back = tk.Label(self, text=self.toString(1))
+        self.back.pack(side=tk.TOP, anchor = tk.W,  padx = 10, pady=10)
         
         self.adapter = BLEAdapter()
         self.update_text()
@@ -71,13 +71,15 @@ class App(tk.Tk):
             popup_window = tk.Toplevel(self)
             popup_window.geometry("300x200")
 
+            for i in range(3):
+                self.calibratedOutput_F[i] = self.parsedOutput_F[i]
+                self.calibratedOutput_B[i] = self.parsedOutput_B[i]
             self.displayCalibration(popup_window,tk.TOP,tk.N,0,10)
     
             close_button = tk.Button(popup_window, text="Close", command=popup_window.destroy)
             close_button.pack(side=tk.TOP, anchor=tk.N, padx=10, pady=10)
-            self.pitch.config(text=self.toString("Pitch", 0))
-            self.yaw.config(text=self.toString("Yaw", 1))
-            self.roll.config(text=self.toString("Roll", 2))
+            self.front.config(text=self.toString(0))
+            self.back.config(text=self.toString(1))
             return
     
     
@@ -91,9 +93,10 @@ class App(tk.Tk):
                     self.read()
                     return
                 else:
-                    self.connectblue.set(0)  
-           
-            
+                    self.connectblue.set(0)
+                    self.adapter.SERVICE_F = 0
+                    self.adapter.SERVICE_B = 0
+                   
             else:
                 self.disconnect_bluetooth() 
                 print(f"Disconnected from Bluetooth Device") 
@@ -105,9 +108,13 @@ class App(tk.Tk):
         global data
         with self._lock:
             asyncio.run(self.adapter.read_data())
-            for i in range(len(self.adapter.data)):
-                self.output[i] = self.adapter.data[i]
-            self.ParseOutput()
+            for i in range(len(self.adapter.data_F)):
+                if (len(self.adapter.data_F) > 0):
+                    self.output_F[i] = self.adapter.data_F[i]
+                if (len(self.adapter.data_B) > 0):
+                    self.output_B[i] = self.adapter.data_B[i]
+            self.ParseOutput(0)
+            self.ParseOutput(1)
             self.after(500,self.read)  
         return
 
@@ -125,57 +132,44 @@ class App(tk.Tk):
         with self._lock:
             self.display.config(state=tk.NORMAL)  
             self.display.delete("1.0", tk.END)  
-            self.display.insert(tk.END, self.parsedOutput)  
+            self.display.insert(tk.END, "Front: ") 
+            self.display.insert(tk.END, self.parsedOutput_F)  
+            self.display.insert(tk.END, "\n") 
+            self.display.insert(tk.END, "Back: ") 
+            self.display.insert(tk.END, self.parsedOutput_B)
+            self.display.insert(tk.END, "\n")   
             self.display.config(state=tk.DISABLED)
             self.after(500,self.update_text)  
             
     
-    def ParseOutput(self):
-        result = []
-        AccX = self.output[0]
-        AccY = self.output[1]
-        AccZ = self.output[2]
-        GyroX = self.output[3]
-        GyroY = self.output[4]
-        GyroZ = self.output[5]
-        accAngleX = (math.atan(AccY / math.sqrt(pow(AccX, 2) + pow(AccZ, 2))) * 180 / math.pi) - 0.58
-        accAngleY = (math.atan(-1 * AccX / math.sqrt(pow(AccY, 2) + pow(AccZ, 2))) * 180 / math.pi) + 1.58
-        
-        if (self.currentTime == 0):
-            self.currentTime = time.time()
-        previousTime = self.currentTime
-        self.currentTime = time.time()
-        elapsedTime = (self.currentTime - previousTime)  
-        
-        # Correct output with Error values
-        GyroX = GyroX + 0.56
-        GyroY = GyroY - 2
-        GyroZ = GyroZ + 0.79
+    def ParseOutput(self, i):
+        output = self.output_F if i == 0 else self.output_B
+        parsedOutput = self.parsedOutput_F if i == 0 else self.parsedOutput_B
+        AccX = output[0]
+        AccY = output[1]
+        AccZ = output[2]
+        GyroX = output[3]
+        GyroY = output[4]
+        GyroZ = output[5]
+        pitch = (math.atan2(AccY, math.sqrt(pow(AccX, 2) + pow(AccZ, 2))) )*180/math.pi
+        roll = math.atan2(-AccX, AccZ)*180/math.pi
+        dt = 0.05  # Time between readings (adjust as needed)
+        yaw = parsedOutput[1] + GyroZ * dt
+        parsedOutput[0] = pitch
+        parsedOutput[1] = yaw
+        parsedOutput[2] = roll
 
-        # Calculate gyro angles
-        self.gyroAngleX = self.gyroAngleX + GyroX * elapsedTime
-        self.gyroAngleY = self.gyroAngleY + GyroY * elapsedTime
-        self.yaw += GyroZ * elapsedTime
-
-        # Complementary filter - combine accelerometer and gyro angle values
-        roll = 0.96 * gyroAngleX + 0.04 * accAngleX
-        pitch = 0.96 * gyroAngleY + 0.04 * accAngleY
-        
-        self.parsedOutput[0] = pitch
-        self.parsedOutput[1] = yaw
-        self.parsedOutput[2] = roll
-        return
         
     def displayCalibration(self,window,sd,ac,px,py):
-        window.pitch = tk.Label(window, text=self.toString("Pitch", 0))
-        window.pitch.pack(side=sd, anchor=ac, padx = px, pady=py)
-        window.yaw = tk.Label(window, text=self.toString("Yaw", 1))
-        window.yaw.pack(side=sd, anchor=ac, padx = px,pady=py)
-        window.roll = tk.Label(window, text=self.toString("Roll", 2))
-        window.roll.pack(side=sd, anchor=ac, padx = px, pady=py)
+        window.front = tk.Label(window, text=self.toString(0))
+        window.front.pack(side=sd, anchor=ac, padx = px, pady=py)
+        window.back = tk.Label(window, text=self.toString(1))
+        window.back.pack(side=sd, anchor=ac, padx = px,pady=py)
             
-    def toString(self,text,i):
-        return text + ": " + str(self.calibratedOutput[i])
+    def toString(self,i):  #0 is front, 1 is back
+        calibratedOutput = self.calibratedOutput_F if i == 0 else self.calibratedOutput_B
+        side = "Front" if i == 0 else "Back"
+        return side + ":\n" + "Pitch" + ":  " + str(calibratedOutput[0])  + "Yaw" + ":  " + str(calibratedOutput[1]) + "Roll" + ":  " + str(calibratedOutput[2])
     
     
 if __name__ == "__main__":

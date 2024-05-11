@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 5/11/2024
+### Contributors
+Bran Zhang
+### Added
+1. 
+    * 
+### Changed
+1. 
+    * Rescaled python code for 2 BLEDevice.
+    * Fixed UUID conflicsts betweenn front and back
+    * Linked display and calibration to actual data
+    * Parsed accelerometer output into pitch, yaw and roll
+    * Bug fixes
+
+### Removed
+1. 
 
 ## 5/09/2024
 ### Contributors

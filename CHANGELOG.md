@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 5/12/2024
+### Contributors
+Allen Keng
+### Added
+None
+### Changed
+1. 
+    * Added to ESP32 Arduino code to take in buzzer activating and calibration signal.
+
+### Removed
+None
+
 ## 5/11/2024
 ### Contributors
 Bran Zhang

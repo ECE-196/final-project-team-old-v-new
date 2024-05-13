@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 5/13/2024
+### Contributors
+Bran Zhang
+### Added
+1. 
+    * Added image for jumpwireed accelerometer
+### Changed
+1. 
+
+### Removed
+1. 
+
 ## 5/11/2024
 ### Contributors
 Bran Zhang

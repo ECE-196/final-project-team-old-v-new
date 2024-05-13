@@ -10,6 +10,7 @@
 #define SDApin  21    //IO 21 SDA
 #define SCLpin  22    //IO 22 SCL
 #define Acc_Sensitivity 16384.00 
+const int buzzer = 1; //buzzer to arduino pin 1 GPIO1
 
 BLEService sensorService("19b10010-e8f2-537e-4f6c-d104768a1220"); // create service
 
@@ -68,6 +69,7 @@ void setup() {
 
   // start advertising
   BLE.advertise();
+  pinMode(buzzer, OUTPUT); // Set buzzer - pin 1 as an output
 }
 
 void loop() {
@@ -76,6 +78,13 @@ void loop() {
   BLEDevice central = BLE.central();
   if (central){
     while (central.connected()){
+      // Detect when to activate buzzer
+      if (switchCharacteristic.written()) {
+        buzzerActivator(switchCharacteristic.value());
+      }
+      if(calibrateCharacteristic.written()) {
+        performCalibration();
+      }
       recordRegister();
       float sensorValues[NUMVALUESFROMACC] = { 
             // m/s^2
@@ -93,39 +102,40 @@ void loop() {
       sendSensorChars.writeValue(byteArray,sizeof(byteArray));
     }
   }
-  /*Serial.print("| accl_X: ");
-  Serial.print(accl_X);
-  Serial.print(" g");
-  Serial.print("\t");
-
-  Serial.print("| accl_Y ");
-  Serial.print(accl_Y);
-  Serial.print(" g");
-  Serial.print("\t");
-
-  Serial.print("| accl_Z ");
-  Serial.print(accl_Z);
-  Serial.print(" g");
-  Serial.print("\n");
-
-  Serial.print("| GyX: ");
-  Serial.print(GyX);
-  Serial.print(" g");
-  Serial.print("\t");
-
-  Serial.print("| GyY ");
-  Serial.print(GyY);
-  Serial.print(" g");
-  Serial.print("\t");
-
-  Serial.print("| GyZ ");
-  Serial.print(GyZ);
-  Serial.print(" g");
-  Serial.print("\n");*/
-
+  //printAccelValues();
   delay(50); 
 }
+/**
+ * Activates the buzzers given a state from the interface.
+*/
+void buzzerActivator(int state) {
+  if (state == 1) {
+    tone(buzzer, 1000); // Send 1KHz sound signal...
+    delay(500);        // ...for half sec
+    noTone(buzzer);     // Stop sound...
+    
+  } else if(state == 2) {
+    tone(buzzer, 1000); // Send 1KHz sound signal...
+    delay(1000);        // ...for 1 sec
+    noTone(buzzer);     // Stop sound...
+  }
+  else {
+    //Serial.println("Buzzer off");
+    noTone(buzzer);
+  }
+  switchCharacteristic.writeValue(0); // Reset state
+}
 
+/**
+ * Insert Calibration code here
+*/
+void performCalibration() {
+  calibrateCharacteristic.writeValue(0); // Reset state
+}
+
+/**
+ * Obtains accelerometer / gyroscope values from MPU6050 and stores it in global variables.
+*/
 void recordRegister() {
   Serial.println("Recording register...");
   Wire.beginTransmission(MPU_ADDR); // Start transmission to MPU
@@ -170,3 +180,35 @@ void MPU6050_Read(int address,uint8_t *data){            // Read from MPU6050. N
 }
 
 
+void printAccelValues() {
+  Serial.print("| accl_X: ");
+  Serial.print(accl_X);
+  Serial.print(" g");
+  Serial.print("\t");
+
+  Serial.print("| accl_Y ");
+  Serial.print(accl_Y);
+  Serial.print(" g");
+  Serial.print("\t");
+
+  Serial.print("| accl_Z ");
+  Serial.print(accl_Z);
+  Serial.print(" g");
+  Serial.print("\n");
+
+  Serial.print("| GyX: ");
+  Serial.print(GyX);
+  Serial.print(" g");
+  Serial.print("\t");
+
+  Serial.print("| GyY ");
+  Serial.print(GyY);
+  Serial.print(" g");
+  Serial.print("\t");
+
+  Serial.print("| GyZ ");
+  Serial.print(GyZ);
+  Serial.print(" g");
+  Serial.print("\n");
+
+}

@@ -1,5 +1,6 @@
 # CHANGELOG
 
+<<<<<<< HEAD
 ## 5/13/2024
 ### Contributors
 Bran Zhang
@@ -11,6 +12,19 @@ Bran Zhang
 
 ### Removed
 1. 
+=======
+## 5/12/2024
+### Contributors
+Allen Keng
+### Added
+None
+### Changed
+1. 
+    * Added to ESP32 Arduino code to take in buzzer activating and calibration signal.
+
+### Removed
+None
+>>>>>>> 28deba6b6c929d6f2fd11a451d625d92942c9114
 
 ## 5/11/2024
 ### Contributors

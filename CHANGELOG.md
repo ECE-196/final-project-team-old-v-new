@@ -1,19 +1,30 @@
 # CHANGELOG
+## 5/14/2024
+### Contributors
+Allen Keng
+### Added
+None
+### Changed
+1. bluetoothEsp.py : check to see if send data to forward or back. 
+2. main.py : added temporary buttons/method to test buzzers, shifted UI slightly, empty buttons to calibrate
 
-<<<<<<< HEAD
+### Removed
+1. 
+
+
 ## 5/13/2024
 ### Contributors
 Bran Zhang
 ### Added
 1. 
-    * Added image for jumpwireed accelerometer
+    * Added image for jumpwired accelerometer
     * Added image for python GUI
 ### Changed
 1. 
 
 ### Removed
 1. 
-=======
+
 ## 5/12/2024
 ### Contributors
 Allen Keng
@@ -25,7 +36,6 @@ None
 
 ### Removed
 None
->>>>>>> 28deba6b6c929d6f2fd11a451d625d92942c9114
 
 ## 5/11/2024
 ### Contributors

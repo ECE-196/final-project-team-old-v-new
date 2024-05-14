@@ -110,18 +110,23 @@ void loop() {
 */
 void buzzerActivator(int state) {
   if (state == 1) {
-    tone(buzzer, 1000); // Send 1KHz sound signal...
+    //tone(buzzer, 1000); // Send 1KHz sound signal...
+    digitalWrite(buzzer, HIGH);
     delay(500);        // ...for half sec
-    noTone(buzzer);     // Stop sound...
+    //noTone(buzzer);     // Stop sound...
+    digitalWrite(buzzer, LOW);
     
   } else if(state == 2) {
-    tone(buzzer, 1000); // Send 1KHz sound signal...
+    //tone(buzzer, 1000); // Send 1KHz sound signal...
+    digitalWrite(buzzer, HIGH);
     delay(1000);        // ...for 1 sec
-    noTone(buzzer);     // Stop sound...
+    //noTone(buzzer);     // Stop sound...
+    digitalWrite(buzzer, LOW);
   }
   else {
     //Serial.println("Buzzer off");
-    noTone(buzzer);
+    //noTone(buzzer);
+    digitalWrite(buzzer, LOW);
   }
   switchCharacteristic.writeValue(0); // Reset state
 }

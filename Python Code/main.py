@@ -32,7 +32,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         
-        self.title("Snowboard")
+        self.title("Snowboard Support System")
         self.geometry("800x600")
         self.calibration_F = []
         self.calibration_B = []
@@ -47,7 +47,25 @@ class App(tk.Tk):
 
         self.checkButton = tk.Checkbutton(self, text="Connect to Bluetooth",  variable=self.connectblue, command=lambda : self.toggle_bluetooth(self.connectblue))
         self.checkButton.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
-        ttk.Button(self, text='calibrate', command=self.update_calibration).pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
+        self.checkButton.place(relx=.8, rely=0.2, anchor="center")
+        
+        calibrateL = ttk.Button(self, text='Calibrate Forward', command=self.update_calibration)
+        calibrateL.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
+        calibrateL.place(relx=.40, rely=0.2, anchor="center")
+        
+        calibrateR = ttk.Button(self, text='Calibrate Back', command=self.update_calibration)
+        calibrateR.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
+        calibrateR.place(relx=.60, rely=0.2, anchor="center")
+        
+        # Here for testing purposes for the buzzers
+        buzzL = ttk.Button(self, text='Forward Buzzer', command=self.writeForward)
+        buzzL.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
+        buzzL.place(relx=.40, rely=0.1, anchor="center")
+
+        buzzR = ttk.Button(self, text='Back Buzzer', command=self.writeBack)
+        buzzR.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
+        buzzR.place(relx=.60, rely=0.1, anchor="center")
+
         self.display = tk.Text(self, height=5, width=80, state=tk.DISABLED)
         self.console = tk.Text(self, height=10, width=80, state=tk.DISABLED)
         self.console.pack(side=tk.BOTTOM, fill="both", expand=True, anchor=tk.W,padx=50, pady=10)
@@ -118,9 +136,16 @@ class App(tk.Tk):
             self.after(500,self.read)  
         return
 
+    # Methods to send signal to buzzer (right now only short beeps)
     @detached_callback
-    def write(self):
-        return
+    def writeForward(self):
+            asyncio.run(self.adapter.send_data("forward",1,1))
+            return
+
+    @detached_callback
+    def writeBack(self):
+            asyncio.run(self.adapter.send_data("back",1,1))
+            return
 
     @detached_callback
     def disconnect_bluetooth(self):

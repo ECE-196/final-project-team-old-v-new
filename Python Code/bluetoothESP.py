@@ -19,9 +19,14 @@ class BLEAdapter:
         self.SERVICE_B = 0
         return
 
-    async def send_data(self, client, val_F, val_B):
-        await client.write_gatt_char(CHARACTERISTIC_UUID_F, bytearray([val_F]), response=True)
-        await client.write_gatt_char(CHARACTERISTIC_UUID_B, bytearray([val_B]), response=True)
+    async def send_data(self, which, val_F, val_B):
+        if which == "both":
+            await self.client_F.write_gatt_char(CHARACTERISTIC_UUID_F, bytearray([val_F]), response=True)
+            await self.client_B.write_gatt_char(CHARACTERISTIC_UUID_B, bytearray([val_B]), response=True)
+        elif which == "forward":
+            await self.client_F.write_gatt_char(CHARACTERISTIC_UUID_F, bytearray([val_F]), response=True)
+        else: 
+            await self.client_B.write_gatt_char(CHARACTERISTIC_UUID_B, bytearray([val_B]), response=True)
 
     async def read_data(self): 
         try:
@@ -43,9 +48,9 @@ class BLEAdapter:
     async def cycle_data(self,client):
         print("Performing actions")
         for _ in range(5):  # Send data for about 20 seconds (5 cycles of 4 seconds each)
-            await send_data(client, 1)  # Send value of 1
+            await self.send_data(client, 1)  # Send value of 1
             await asyncio.sleep(2)  # Wait for 2 seconds
-            await send_data(client, 0)  # Send value of 0
+            await self.send_data(client, 0)  # Send value of 0
             await asyncio.sleep(2)  # Wait for 2 seconds
         
         await client.disconnect()

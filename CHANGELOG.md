@@ -7,6 +7,7 @@ Bran Zhang
 ### Added
 1. 
     * Added image for jumpwireed accelerometer
+    * Added image for python GUI
 ### Changed
 1. 
 

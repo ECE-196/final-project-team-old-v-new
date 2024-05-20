@@ -1,4 +1,17 @@
 # CHANGELOG
+
+## 5/19/2024
+### Contributors
+Allen Keng, John Mamola, Bran Zhang
+### Added
+1. 8-10minPresentation : our prototype presentation with updates
+ * to show that we submitted before 5/19/24 11:59pm
+### Changed
+None
+
+### Removed
+None
+
 ## 5/14/2024
 ### Contributors
 Allen Keng

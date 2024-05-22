@@ -3,6 +3,11 @@ from threading import Thread, Lock
 from bluetoothESP import BLEAdapter
 import asyncio
 
+from __future__ import annotations
+from threading import Thread, Lock
+from bluetoothESP import BLEAdapter
+import asyncio
+
 import sys
 import math
 import time
@@ -12,6 +17,7 @@ from threading import Thread, Lock
 from tkinter.messagebox import showerror
 
 LAMBDA = 10e-6
+dt = 0.05
 
 def detached_callback(f):
     return lambda *args, **kwargs: Thread(target=f, args=args, kwargs=kwargs).start()
@@ -37,6 +43,8 @@ class App(tk.Tk):
         self.calibration_F = []
         self.calibration_B = []
         self.connectblue = tk.IntVar()
+        self.prevAccel = 0
+        self.velocity = 0
 
         self.output_F = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         self.parsedOutput_F = [0.0,0.0,0.0]
@@ -58,7 +66,7 @@ class App(tk.Tk):
         calibrateR.place(relx=.60, rely=0.2, anchor="center")
         
         # Here for testing purposes for the buzzers
-        buzzL = ttk.Button(self, text='Forward Buzzer', command=self.writeForward)
+        buzzL = ttk.Button(self, text='Forward Buzzer', command=self.writeFront)
         buzzL.pack(side=tk.TOP, anchor=tk.E, padx=10, pady=10)
         buzzL.place(relx=.40, rely=0.1, anchor="center")
 
@@ -117,6 +125,10 @@ class App(tk.Tk):
                    
             else:
                 self.disconnect_bluetooth() 
+                self.velocity = 0
+                self.prevAccel = 0
+                self.calibratedOutput_F = [0.0,0.0,0.0]
+                self.calibratedOutput_B = [0.0,0.0,0.0]
                 print(f"Disconnected from Bluetooth Device") 
             
             return  
@@ -125,6 +137,7 @@ class App(tk.Tk):
     def read(self):
         global data
         with self._lock:
+            self.prevAccel = self.output_B[0]
             asyncio.run(self.adapter.read_data())
             for i in range(len(self.adapter.data_F)):
                 if (len(self.adapter.data_F) > 0):
@@ -133,13 +146,13 @@ class App(tk.Tk):
                     self.output_B[i] = self.adapter.data_B[i]
             self.ParseOutput(0)
             self.ParseOutput(1)
-            self.after(500,self.read)  
+            self.after(50,self.read)  
         return
 
     # Methods to send signal to buzzer (right now only short beeps)
     @detached_callback
-    def writeForward(self):
-            asyncio.run(self.adapter.send_data("forward",1,1))
+    def writeFront(self):
+            asyncio.run(self.adapter.send_data("front",1,1))
             return
 
     @detached_callback
@@ -163,8 +176,11 @@ class App(tk.Tk):
             self.display.insert(tk.END, "Back: ") 
             self.display.insert(tk.END, self.parsedOutput_B)
             self.display.insert(tk.END, "\n")   
+            self.display.insert(tk.END, "Velocity: ") 
+            self.display.insert(tk.END, self.velocity)
+            self.display.insert(tk.END, "\n")  
             self.display.config(state=tk.DISABLED)
-            self.after(500,self.update_text)  
+            self.after(50,self.update_text)  
             
     
     def ParseOutput(self, i):
@@ -184,6 +200,10 @@ class App(tk.Tk):
         parsedOutput[1] = yaw
         parsedOutput[2] = roll
 
+    def updateVelocity(self):
+        global dt
+        self.velocity += (output_B[0] + prevAccel) * dt / 2.0
+
         
     def displayCalibration(self,window,sd,ac,px,py):
         window.front = tk.Label(window, text=self.toString(0))
@@ -199,3 +219,6 @@ class App(tk.Tk):
     
 if __name__ == "__main__":
     app = App()
+
+    
+    

@@ -3,6 +3,7 @@
 //#include <Adafruit_Sensor.h>
 #include <Wire.h>
 #include <stdio.h>
+#include <math.h>
 
 #define BaudRate 115200
 #define NUMBYTESFROMACC 24
@@ -10,19 +11,26 @@
 #define SDApin  21    //IO 21 SDA
 #define SCLpin  22    //IO 22 SCL
 #define Acc_Sensitivity 16384.00 
+#define ALPHA 0.98
+#define dt 0.05
+#define PI 3.14159265358979323846
 const int buzzer = 1; //buzzer to arduino pin 1 GPIO1
 
-BLEService sensorService("19b10010-e8f2-537e-4f6c-d104768a1220"); // create service
+BLEService sensorService("19b10010-e8f2-537e-4f6c-d104768a1212"); // create service
 
-BLEByteCharacteristic switchCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1217", BLERead | BLEWrite); // create characteristic
-BLECharacteristic sendSensorChars("19b10011-e8f2-537e-4f6c-d104768a1218", BLERead | BLENotify, NUMBYTESFROMACC);
-BLEByteCharacteristic calibrateCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1219", BLERead | BLEWrite); // Tell measurements to calibrate
+BLEByteCharacteristic switchCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1214", BLERead | BLEWrite); // create characteristic
+BLECharacteristic sendSensorChars("19b10011-e8f2-537e-4f6c-d104768a1215", BLERead | BLENotify, NUMBYTESFROMACC);
+BLEByteCharacteristic calibrateCharacteristic("19b10011-e8f2-537e-4f6c-d104768a1216", BLERead | BLEWrite); // Tell measurements to calibrate
 
 uint8_t MPU6050_WHO_AM_I = 0x75;
 uint8_t MPU_ADDR = 0x68; // I2C address of the MPU-6050
 size_t size = 24;
 bool stopbit = false;
 float accl_X, accl_Y, accl_Z, GyX, GyY, GyZ;
+float pitch, yaw, roll;
+float vx = 0;
+float vy = 0;
+float vz = 0;
 byte byteArray[NUMBYTESFROMACC];
 
 
@@ -46,7 +54,7 @@ void setup() {
   }
 
   // set advertised local name and service UUID
-  BLE.setLocalName("SnowboardSensorBack");
+  BLE.setLocalName("SnowboardSensorFront");
   BLE.setAdvertisedService(sensorService);
   BLE.setAdvertisingInterval(62);
 
@@ -86,15 +94,16 @@ void loop() {
         performCalibration();
       }
       recordRegister();
+      parseAccelOutput();
       float sensorValues[NUMVALUESFROMACC] = { 
             // m/s^2
-            accl_X,
-            accl_Y, 
-            accl_Z, 
+            pitch,
+            yaw, 
+            roll, 
             // Rotation - rad/s
-            GyX,
-            GyY, 
-            GyZ
+            vx,
+            vy, 
+            vz
       };
       for(int i = 0; i < NUMVALUESFROMACC; i++) {
           memcpy(&byteArray[i * sizeof(float)], &sensorValues[i], sizeof(float));
@@ -112,7 +121,7 @@ void buzzerActivator(int state) {
   if (state == 1) {
     //tone(buzzer, 1000); // Send 1KHz sound signal...
     digitalWrite(buzzer, HIGH);
-    delay(500);        // ...for half sec
+    delay(5);        // ...for half sec
     //noTone(buzzer);     // Stop sound...
     digitalWrite(buzzer, LOW);
     
@@ -217,3 +226,16 @@ void printAccelValues() {
   Serial.print("\n");
 
 }
+
+void parseAccelOutput(){
+  float pitch_acc  = (atan2(accl_Y, sqrt(pow(accl_X, 2) + pow(accl_Z, 2))))*180/PI;
+  float roll_acc = atan2(-accl_X, accl_Z)*180/PI;
+  pitch = ALPHA * (pitch + GyX * dt) + (1 - ALPHA) * pitch_acc;
+  roll = ALPHA * (roll + GyY * dt) + (1 - ALPHA) * roll_acc;
+  yaw = yaw + GyZ * dt;
+  vx += (vx + accl_X) * dt / 2.0;
+  vy += (vy + accl_Y) * dt / 2.0;
+  vz += (vz + accl_Z) * dt / 2.0;
+
+}
+

@@ -1,5 +1,22 @@
 # CHANGELOG
+## 5/24/2024
+### Contributors
+Bran Zhang, Allen Keng
+### Added
 
+### Changed
+1. Accel.ino, main_v2.py, moved data parsing logic from python to arduinoIDE
+### Removed
+None
+## 5/22/2024
+### Contributors
+Bran Zhang
+### Added
+1. Added main_v2.py, reworked UI backend logic, fixed event loop and concurrency issue between tkinter and bleak
+### Changed
+1. bluetoothESP.py, included thorough error handling and modified methods to be fully compatible with front end
+### Removed
+None
 ## 5/19/2024
 ### Contributors
 Allen Keng, John Mamola, Bran Zhang

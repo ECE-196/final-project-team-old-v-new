@@ -121,8 +121,15 @@ async def read():
                     asyncio.create_task(update_display())
                 except Exception as e:
                     print("Error in read():", e)
-        else: 
-            continue
+        else:
+            adapter.disconnect = True
+            await adapter.disconnect_and_quit() 
+            adapter.disconnect = False
+            i = 1
+            while (adapter.isConnected == False):
+                print("reconnecting...",i)
+                await adapter.scan_and_connect()
+                i+=1
         await asyncio.sleep(0.05)
     
 async def write_front():
@@ -130,7 +137,7 @@ async def write_front():
     while (stop ==False):
         if (adapter.disconnect  == True):
             break
-        if (adapter.isConnected == True and buzz_F == True):
+        if (adapter.client_F.is_connected and adapter.client_B.is_connected and buzz_F == True):
             asyncio.create_task(adapter.send_data("Front",1,1))
         await asyncio.sleep(1/freq_F)
 
@@ -139,7 +146,7 @@ async def write_back():
     while (stop ==False):
         if (adapter.disconnect  == True):
             break
-        if (adapter.isConnected == True and buzz_B == True):
+        if (adapter.client_F.is_connected and adapter.client_B.is_connected and buzz_B == True):
             asyncio.create_tast(adapter.send_data("Back",1,1))
         await asyncio.sleep(1/freq_B)
 
@@ -198,8 +205,8 @@ async def updateBuzzerState_B():
 #displays    
 async def update_display():
     global display,output_B, output_F
-    pyr_B = [output_B[2],output_B[1],output_B[0], output_B[5]]
-    pyr_F = [output_F[2],output_F[1],output_F[0], output_B[5]]
+    pyr_B = ["{:.2f}".format(output_B[2]),"{:.2f}".format(output_B[1]),"{:.2f}".format(output_B[0]), "{:.2f}".format(output_B[5])]
+    pyr_F = ["{:.2f}".format(output_F[2]),"{:.2f}".format(output_F[1]),"{:.2f}".format(output_F[0]), "{:.2f}".format(output_F[5])]
     display.config(state=tk.NORMAL)  
     display.delete("1.0", tk.END)  
     display.insert(tk.END, "Front: ") 

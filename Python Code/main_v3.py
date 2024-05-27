@@ -216,8 +216,9 @@ async def connect_bluetooth():
         await adapter.scan_and_connect()
         if adapter.isConnected == True:
             asyncio.create_task(read())
-            await write_front()
-            await write_back()
+            asyncio.create_task(write_back())
+            asyncio.create_task(write_front())
+            
     else:
         print("Already connected")
         messagebox.showerror("Bluetooth Connection", "You are already connected to the devices!")
@@ -280,7 +281,7 @@ async def write_back():
         if (adapter.disconnect  == True):
             break
         if (adapter.client_F.is_connected and adapter.client_B.is_connected and buzz_B == True):
-            asyncio.create_task(adapter.send_data("Back",1,1))
+            asyncio.create_task(adapter.send_data("Back",2,2))
         await asyncio.sleep(1.5)
 
 async def calibrateLeft():
@@ -304,7 +305,7 @@ async def calibrateRight():
         displayCalibration(popup_window,tk.TOP,tk.N,0,10)
         close_button = tk.Button(popup_window, text="Close", command=popup_window.destroy)
         close_button.pack(side=tk.TOP, anchor=tk.N, padx=10, pady=10)
-    right.config(text=toString(1))
+    right.config(text=toString(0))
     return
 
 
@@ -333,7 +334,7 @@ async def updateBuzzerState_F():
 
 async def updateBuzzerState_B():
     global adapter, buzz_B, output_B, output_F, SAFE_VELOCITY
-    if output_B[5] > 0.8*SAFE_VELOCITY:     #output_F[5] = vy
+    if math.fabs(output_B[5]) > 0.8*SAFE_VELOCITY:     #output_F[5] = vy
         buzz_B = True
         freq_B = 60 + 180 * (output_B[5] - 0.8*SAFE_VELOCITY)/(SAFE_VELOCITY-0.8*SAFE_VELOCITY)
     else:

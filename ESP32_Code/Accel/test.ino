@@ -69,7 +69,7 @@ void setup() {
   }
 
   // set advertised local name and service UUID
-  BLE.setLocalName("SnowboardSensorFront");
+  BLE.setLocalName("SnowboardSensorBack");
   BLE.setAdvertisedService(sensorService);
   BLE.setAdvertisingInterval(62);
 
@@ -119,8 +119,8 @@ void loop() {
             yaw, 
             roll, 
             // Rotation - rad/s
-            v_actual,
-            vy, 
+            vx,
+            v_actual, 
             vz
       };
       for(int i = 0; i < NUMVALUESFROMACC; i++) {

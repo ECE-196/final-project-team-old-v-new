@@ -1,6 +1,15 @@
 # CHANGELOG
 ## 5/27/2024
 ### Contributors
+1. Allen Keng, Bran , John Mamola
+### Added
+
+### Changed
+2. functional buzzer trigger in main_v3 for left and right roll. Updated calibration logic
+### Removed
+None
+## 5/27/2024
+### Contributors
 1. Allen Keng
 2. Allen Keng, Bran , John Mamola
 ### Added

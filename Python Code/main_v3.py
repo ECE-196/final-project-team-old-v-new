@@ -305,31 +305,23 @@ async def calibrateRight():
         displayCalibration(popup_window,tk.TOP,tk.N,0,10)
         close_button = tk.Button(popup_window, text="Close", command=popup_window.destroy)
         close_button.pack(side=tk.TOP, anchor=tk.N, padx=10, pady=10)
-    right.config(text=toString(0))
+    right.config(text=toString(1))
     return
 
 
 #Data Parsing Logics
 async def updateBuzzerState_F():
     global adapter, buzz_F,calibratedOutput_L, calibratedOutput_R, output_F
-    if (calibratedOutput_L[0] == 0 or calibratedOutput_R[0] == 0):   #check for pitch, positive y axis is front
-        return       
-    if (calibratedOutput_L[0] > 0 and output_F[0] > 0.8*calibratedOutput_L[0]):
+    if (calibratedOutput_L[2] > 0 and output_F[2] > calibratedOutput_L[2]):
         buzz_F = True
-        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_L[0])/math.fabs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
-    elif (calibratedOutput_R[0] > 0 and output_F[0] > 0.8*calibratedOutput_R[0]):
+    elif (calibratedOutput_L[2] < 0 and output_F[2] < calibratedOutput_L[2]):
         buzz_F = True
-        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_R[0])/math.fabs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
-    elif (calibratedOutput_L[0] < 0 and output_F[0] < 0.8*calibratedOutput_L[0]):
+    elif (calibratedOutput_R[2] > 0 and output_F[2] > calibratedOutput_R[2]):
         buzz_F = True
-        freq_F = 60 + 180 * (0.8*calibratedOutput_L[0] - output_F[0])/math.fabs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
-    elif (calibratedOutput_R[0] < 0 and output_F[0] < 0.8*calibratedOutput_R[0]):
+    elif (calibratedOutput_R[2] < 0 and output_F[2] < calibratedOutput_R[2]):
         buzz_F = True
-        freq_F = 60 + 180 * (0.8*calibratedOutput_R[0] - output_F[0])/math.fabs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
     else:
-        buzz_F = False  
-        freq_F = 60
-
+        buzz_F = False
     return
 
 async def updateBuzzerState_B():
@@ -345,8 +337,8 @@ async def updateBuzzerState_B():
 #displays    
 async def update_display():
     global display,output_B, output_F
-    pyr_B = ["{:.2f}".format(output_B[2]),"{:.2f}".format(output_B[1]),"{:.2f}".format(output_B[0]), "{:.2f}".format(output_B[5])]
-    pyr_F = ["{:.2f}".format(output_F[2]),"{:.2f}".format(output_F[1]),"{:.2f}".format(output_F[0]), "{:.2f}".format(output_F[5])]
+    pyr_B = ["{:.2f}".format(output_B[0]),"{:.2f}".format(output_B[1]),"{:.2f}".format(output_B[2]), "{:.2f}".format(output_B[5])]
+    pyr_F = ["{:.2f}".format(output_F[0]),"{:.2f}".format(output_F[1]),"{:.2f}".format(output_F[2]), "{:.2f}".format(output_F[5])]
     display.config(state=tk.NORMAL)  
     display.delete("1.0", tk.END)  
     display.insert(tk.END, "Front: ") 
@@ -368,7 +360,7 @@ def toString(i):  #0 is front, 1 is back
     global calibratedOutput_L, calibratedOutput_R
     calibratedOutput = calibratedOutput_L if i == 0 else calibratedOutput_R
     side = "Left" if i == 0 else "Right"
-    return side + ":\n" + "Pitch" + ":  " + str(calibratedOutput[2])  + "/  Yaw" + ":  " + str(calibratedOutput[1]) + "/ Roll" + ":  " + str(calibratedOutput[0]) + "\n"
+    return side + ":\n" + "Pitch" + ":  " + str(calibratedOutput[0])  + "/  Yaw" + ":  " + str(calibratedOutput[1]) + "/ Roll" + ":  " + str(calibratedOutput[2]) + "\n"
 
 
 # Tkinter backend Controls

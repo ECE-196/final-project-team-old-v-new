@@ -119,8 +119,8 @@ void loop() {
             yaw, 
             roll, 
             // Rotation - rad/s
-            v_actual,
-            vy, 
+            vx,
+            v_actual, 
             vz
       };
       for(int i = 0; i < NUMVALUESFROMACC; i++) {
@@ -274,12 +274,10 @@ void parseAccelOutput(){
   vz_old = vz;
   
   v_actual = sqrt(pow(vx,2)+pow(vy,2)+pow(vz,2));
-  
-
 }
 
 void calibrateAccel(){
-  int i = 1000;
+  int i = 20000;
   while (i > 0){
     recordRegister();
     accl_X_offset += accl_X;
@@ -289,13 +287,14 @@ void calibrateAccel(){
     GyY_offset += GyY;
     GyZ_offset += GyZ;
     i--;
-    delay(10);
+    delay(5);
   }
-  accl_X_offset /= 1000;
-  accl_Y_offset /= 1000;
-  accl_Z_offset /= 1000;
-  GyX_offset/= 1000;
-  GyY_offset/= 1000;
-  GyZ_offset/= 1000;
+  accl_X_offset /= 20000;
+  accl_Y_offset /= 20000;
+  accl_Z_offset /= 20000;
+  GyX_offset/= 20000;
+  GyY_offset/= 20000;
+  GyZ_offset/= 20000;
 }
+
 

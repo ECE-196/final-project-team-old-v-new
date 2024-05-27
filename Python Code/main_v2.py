@@ -182,16 +182,16 @@ async def updateBuzzerState_F():
         return       
     if (calibratedOutput_L[0] > 0 and output_F[0] > 0.8*calibratedOutput_L[0]):
         buzz_F = True
-        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_L[0])/math.abs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
+        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_L[0])/math.fabs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
     elif (calibratedOutput_R[0] > 0 and output_F[0] > 0.8*calibratedOutput_R[0]):
         buzz_F = True
-        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_R[0])/math.abs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
+        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_R[0])/math.fabs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
     elif (calibratedOutput_L[0] < 0 and output_F[0] < 0.8*calibratedOutput_L[0]):
         buzz_F = True
-        freq_F = 60 + 180 * (0.8*calibratedOutput_L[0] - output_F[0])/math.abs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
+        freq_F = 60 + 180 * (0.8*calibratedOutput_L[0] - output_F[0])/math.fabs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
     elif (calibratedOutput_R[0] < 0 and output_F[0] < 0.8*calibratedOutput_R[0]):
         buzz_F = True
-        freq_F = 60 + 180 * (0.8*calibratedOutput_R[0] - output_F[0])/math.abs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
+        freq_F = 60 + 180 * (0.8*calibratedOutput_R[0] - output_F[0])/math.fabs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
     else:
         buzz_F = False  
         freq_F = 60

@@ -79,16 +79,17 @@ void setup() {
   // set the initial value for the characteristics
   switchCharacteristic.writeValue(0);
   calibrateCharacteristic.writeValue(0);
+  pinMode(buzzer, OUTPUT); // Set buzzer - pin 1 as an output
+  digitalWrite(buzzer, LOW);
 
   byte sensorData[24] = {0x00}; 
 
   //sendSensorChars.writeValue(sensorData, sizeof(sensorData));
-
+  delay(10000);
+  calibrateAccel();
   // start advertising
   BLE.advertise();
-  pinMode(buzzer, OUTPUT); // Set buzzer - pin 1 as an output
-
-  calibrateAccel();
+  
 }
 
 void loop() {
@@ -132,7 +133,7 @@ void buzzerActivator(int state) {
   if (state == 1) {
     //tone(buzzer, 1000); // Send 1KHz sound signal...
     digitalWrite(buzzer, HIGH);
-    delay(5);        // ...for half sec
+    delay(50);        // ...for half sec
     //noTone(buzzer);     // Stop sound...
     digitalWrite(buzzer, LOW);
     

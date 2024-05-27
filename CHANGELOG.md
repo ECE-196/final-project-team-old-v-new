@@ -1,12 +1,13 @@
 # CHANGELOG
 ## 5/27/2024
 ### Contributors
-Allen Keng
+1. Allen Keng
+2. Allen Keng, Bran , John Mamola
 ### Added
-* main_v3.py, reworked UI colors and display, fixed padding issues. Feedback notes window created. 
-* feedbackExamples.txt 
+1. main_v3.py, reworked UI colors and display, fixed padding issues. Feedback notes window created. feedbackExamples.txt
+
 ### Changed
-None
+2. main_v3.py merge with main_v2 bug fixes, Accel.ino fix latency and buzzer chirps
 ### Removed
 None
 

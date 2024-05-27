@@ -188,16 +188,16 @@ def build_app():
     calibrateL.pack(side=tk.RIGHT, padx=10, pady=10)
 
     
-    #left = tk.Label(text=toString(0))
-    #left.pack(side=tk.TOP, anchor = tk.W, padx = 10)
-    #right = tk.Label(text=toString(1))
-    #right.pack(side=tk.TOP, anchor = tk.W,  padx = 10) 
+    left = tk.Label(text=toString(0))
+    left.pack(side=tk.TOP, anchor = tk.W, padx = 10)
+    right = tk.Label(text=toString(1))
+    right.pack(side=tk.TOP, anchor = tk.W,  padx = 10) 
         
     display = tk.Text(height=4, width=80, state=tk.DISABLED, background="black", foreground="lime", font=("Helvetica", 18) )
-    display.config(state=tk.NORMAL)  
+    #display.config(state=tk.NORMAL)  
 
     # COMMENT HERE
-    display.insert(tk.END, "Hello World: How does this look? 18.9999 6.9999. 9.8686") 
+    #display.insert(tk.END, "Hello World: How does this look? 18.9999 6.9999. 9.8686") 
     console = tk.Text(height=8, width=80, state=tk.DISABLED)
     console.pack(side=tk.BOTTOM, fill="both", expand=True, anchor=tk.W,padx=20,pady=(10,15))
     tk.Label(app,text="Console",font=("Helvetica", 16, "underline"), bg="#BFEFFF").pack(side=tk.BOTTOM, anchor=tk.W,padx=20)
@@ -272,7 +272,7 @@ async def write_front():
             break
         if (adapter.client_F.is_connected and adapter.client_B.is_connected and buzz_F == True):
             asyncio.create_task(adapter.send_data("Front",1,1))
-        await asyncio.sleep(1/freq_F)
+        await asyncio.sleep(1.5)
 
 async def write_back():
     global adapter, buzz_B,freq_B
@@ -280,8 +280,8 @@ async def write_back():
         if (adapter.disconnect  == True):
             break
         if (adapter.client_F.is_connected and adapter.client_B.is_connected and buzz_B == True):
-            asyncio.create_tast(adapter.send_data("Back",1,1))
-        await asyncio.sleep(1/freq_B)
+            asyncio.create_task(adapter.send_data("Back",1,1))
+        await asyncio.sleep(1.5)
 
 async def calibrateLeft():
     global calibratedOutput_L,output_F, left
@@ -312,13 +312,19 @@ async def calibrateRight():
 async def updateBuzzerState_F():
     global adapter, buzz_F,calibratedOutput_L, calibratedOutput_R, output_F
     if (calibratedOutput_L[0] == 0 or calibratedOutput_R[0] == 0):   #check for pitch, positive y axis is front
-        return
-    if (output_F[0] > 0.8*calibratedOutput_L[0]):
+        return       
+    if (calibratedOutput_L[0] > 0 and output_F[0] > 0.8*calibratedOutput_L[0]):
         buzz_F = True
-        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_L[0])/(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
-    elif (output_F[0] > 0.8*calibratedOutput_R[2]):
+        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_L[0])/math.fabs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
+    elif (calibratedOutput_R[0] > 0 and output_F[0] > 0.8*calibratedOutput_R[0]):
         buzz_F = True
-        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_R[0])/(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
+        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_R[0])/math.fabs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
+    elif (calibratedOutput_L[0] < 0 and output_F[0] < 0.8*calibratedOutput_L[0]):
+        buzz_F = True
+        freq_F = 60 + 180 * (0.8*calibratedOutput_L[0] - output_F[0])/math.fabs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
+    elif (calibratedOutput_R[0] < 0 and output_F[0] < 0.8*calibratedOutput_R[0]):
+        buzz_F = True
+        freq_F = 60 + 180 * (0.8*calibratedOutput_R[0] - output_F[0])/math.fabs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
     else:
         buzz_F = False  
         freq_F = 60
@@ -327,11 +333,11 @@ async def updateBuzzerState_F():
 
 async def updateBuzzerState_B():
     global adapter, buzz_B, output_B, output_F, SAFE_VELOCITY
-    if output_F[5] > 0.8*SAFE_VELOCITY:     #output_F[5] = vy
+    if output_B[5] > 0.8*SAFE_VELOCITY:     #output_F[5] = vy
         buzz_B = True
-        freq_B = 60 + 180 * (output_F[5] - 0.8*SAFE_VELOCITY)/(SAFE_VELOCITY-0.8*SAFE_VELOCITY)
+        freq_B = 60 + 180 * (output_B[5] - 0.8*SAFE_VELOCITY)/(SAFE_VELOCITY-0.8*SAFE_VELOCITY)
     else:
-        buzz_F = False  
+        buzz_B= False  
 
     return
 
@@ -361,7 +367,7 @@ def toString(i):  #0 is front, 1 is back
     global calibratedOutput_L, calibratedOutput_R
     calibratedOutput = calibratedOutput_L if i == 0 else calibratedOutput_R
     side = "Left" if i == 0 else "Right"
-    return side + ":\n" + "Pitch" + ":  " + str(calibratedOutput[2])  + "Yaw" + ":  " + str(calibratedOutput[1]) + "Roll" + ":  " + str(calibratedOutput[0]) + "\n"
+    return side + ":\n" + "Pitch" + ":  " + str(calibratedOutput[2])  + "/  Yaw" + ":  " + str(calibratedOutput[1]) + "/ Roll" + ":  " + str(calibratedOutput[0]) + "\n"
 
 
 # Tkinter backend Controls

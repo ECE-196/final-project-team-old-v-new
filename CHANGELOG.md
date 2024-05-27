@@ -1,6 +1,24 @@
 # CHANGELOG
 ## 5/24/2024
 ### Contributors
+Bran Zhang
+### Added
+
+### Changed
+1. main_v2.py, updated buzzing logic, bug fixes
+### Removed
+None
+## 5/24/2024
+### Contributors
+Bran Zhang
+### Added
+
+### Changed
+1. Accel.ino, main_v2.py, calibrated accelerometer before data reading, bug fixes
+### Removed
+None
+## 5/24/2024
+### Contributors
 Bran Zhang, Allen Keng
 ### Added
 

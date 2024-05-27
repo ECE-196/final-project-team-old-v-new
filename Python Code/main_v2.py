@@ -179,13 +179,19 @@ async def calibrateRight():
 async def updateBuzzerState_F():
     global adapter, buzz_F,calibratedOutput_L, calibratedOutput_R, output_F
     if (calibratedOutput_L[0] == 0 or calibratedOutput_R[0] == 0):   #check for pitch, positive y axis is front
-        return
-    if (output_F[0] > 0.8*calibratedOutput_L[0]):
+        return       
+    if (calibratedOutput_L[0] > 0 and output_F[0] > 0.8*calibratedOutput_L[0]):
         buzz_F = True
-        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_L[0])/(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
-    elif (output_F[0] > 0.8*calibratedOutput_R[2]):
+        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_L[0])/math.abs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
+    elif (calibratedOutput_R[0] > 0 and output_F[0] > 0.8*calibratedOutput_R[0]):
         buzz_F = True
-        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_R[0])/(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
+        freq_F = 60 + 180 * (output_F[0] - 0.8*calibratedOutput_R[0])/math.abs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
+    elif (calibratedOutput_L[0] < 0 and output_F[0] < 0.8*calibratedOutput_L[0]):
+        buzz_F = True
+        freq_F = 60 + 180 * (0.8*calibratedOutput_L[0] - output_F[0])/math.abs(calibratedOutput_L[0]-0.8*calibratedOutput_L[0])
+    elif (calibratedOutput_R[0] < 0 and output_F[0] < 0.8*calibratedOutput_R[0]):
+        buzz_F = True
+        freq_F = 60 + 180 * (0.8*calibratedOutput_R[0] - output_F[0])/math.abs(calibratedOutput_R[0]-0.8*calibratedOutput_R[0])
     else:
         buzz_F = False  
         freq_F = 60

@@ -3,11 +3,6 @@ from threading import Thread, Lock
 from bluetoothESP import BLEAdapter
 import asyncio
 
-from __future__ import annotations
-from threading import Thread, Lock
-from bluetoothESP import BLEAdapter
-import asyncio
-
 import sys
 import math
 import time

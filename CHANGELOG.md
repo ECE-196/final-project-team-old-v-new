@@ -1,4 +1,15 @@
 # CHANGELOG
+## 5/27/2024
+### Contributors
+Allen Keng
+### Added
+* main_v3.py, reworked UI colors and display, fixed padding issues. Feedback notes window created. 
+* feedbackExamples.txt 
+### Changed
+None
+### Removed
+None
+
 ## 5/24/2024
 ### Contributors
 Bran Zhang, Allen Keng

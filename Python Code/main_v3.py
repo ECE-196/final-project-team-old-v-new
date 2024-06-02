@@ -93,14 +93,14 @@ def openNotes():
     except FileNotFoundError:
         # If the file is not found, create it and display a message
         with open("Python Code/feedback.txt", "w") as file:
-            file.write("No feedback notes found.")
+            # file.write("No feedback notes found.")
             notes_listbox.insert(tk.END, "No feedback notes found.")
 
 def addNote(number):
     global notes_listbox  # Accessing the global notes_listbox variable
     # Define an array of note strings
     notes = [
-        "Ease up on the throttle, slow down and regain control!",
+        "Slow down, you're moving faster than you should be!",
         "Don't rush, find your rhythm and glide smoothly!",
         "Lead with your knees, not your nose, and maintain balance!",
         "Relax those legs, let them absorb the bumps!",
@@ -111,13 +111,13 @@ def addNote(number):
         "Slow it down, keep your movements deliberate and precise!",
         "Shoulders parallel with your board, stay aligned for stability!",
         "Stay centered, don't let your shoulders lead the way!",
-        "Relax your upper body, let your legs do the work!",
-        "Keep those shoulders square, don't twist too much!",
+        "Lighten your feet!",
+        "Push down on the board more. ",
         "Balance is key, keep your weight evenly distributed!",
         "Maintain a fluid motion, don't tense up!",
         "Stay loose and relaxed, it's all about flow!",
-        "Keep your movements smooth and controlled!",
-        "Stay centered and focused, keep your eyes on the path ahead!",
+        "You are leaning forward too much. ", # 16
+        "You are leaning backwards too much.", # 17
         "Glide with grace, don't force it!",
         "Let the board do the work, just guide it with your movements!"
     ]
@@ -272,7 +272,7 @@ async def write_front():
         if (adapter.disconnect  == True):
             break
         if (adapter.client_F.is_connected and adapter.client_B.is_connected and buzz_F == True):
-            asyncio.create_task(adapter.send_data("Front",1,1))
+            asyncio.create_task(adapter.send_data("Back",2,2))
         await asyncio.sleep(1.5)
 
 async def write_back():
@@ -281,7 +281,7 @@ async def write_back():
         if (adapter.disconnect  == True):
             break
         if (adapter.client_F.is_connected and adapter.client_B.is_connected and buzz_B == True):
-            asyncio.create_task(adapter.send_data("Back",2,2))
+            asyncio.create_task(adapter.send_data("Front",2,2))
         await asyncio.sleep(1.5)
 
 async def calibrateLeft():
@@ -327,7 +327,7 @@ async def updateBuzzerState_F():
 async def updateBuzzerState_B():
     global adapter, buzz_B, output_B, output_F, SAFE_VELOCITY
     if math.fabs(output_B[5]) > 0.8*SAFE_VELOCITY:     #output_F[5] = vy
-        buzz_B = True
+        buzz_B = False
         freq_B = 60 + 180 * (output_B[5] - 0.8*SAFE_VELOCITY)/(SAFE_VELOCITY-0.8*SAFE_VELOCITY)
     else:
         buzz_B= False  

@@ -1,4 +1,15 @@
 # CHANGELOG
+
+## 6/2/204
+### Contributors
+1. Allen Keng
+### Added
+css files, images we added to our website, js script for the website, Final Project Presentation.
+### Changed
+None
+### Removed
+None
+
 ## 5/27/2024
 ### Contributors
 1. Allen Keng, Bran , John Mamola

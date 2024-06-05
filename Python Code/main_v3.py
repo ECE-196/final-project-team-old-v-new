@@ -31,6 +31,9 @@ output_B = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 calibratedOutput_L = [0.0, 0.0, 0.0]
 calibratedOutput_R = [0.0, 0.0, 0.0]
 stop = False
+writeCnt = 1
+writeCntL = 1
+writeCntH = 1
 adapter = BLEAdapter()
 
 notes_listbox = None
@@ -47,20 +50,6 @@ class ConsoleRedirector:
         self.text_widget.insert(tk.END, text)
         self.text_widget.see(tk.END)  
         self.text_widget.config(state=tk.DISABLED)
-
-# UI STUFF
-def create_gradient_background(canvas, color1, color2):
-    width = canvas.winfo_width()
-    height = canvas.winfo_height()
-    canvas.create_rectangle(0, 0, width, height, fill=color1, width=0)
-    for i in range(height):
-        r = int(color1[1:3], 16) + int(i * (int(color2[1:3], 16) - int(color1[1:3], 16)) / height)
-        g = int(color1[3:5], 16) + int(i * (int(color2[3:5], 16) - int(color1[3:5], 16)) / height)
-        b = int(color1[5:7], 16) + int(i * (int(color2[5:7], 16) - int(color1[5:7], 16)) / height)
-        color = f'#{r:02x}{g:02x}{b:02x}'
-        canvas.create_line(0, i, width, i, fill=color)
-
-# UI STUFF
 
 
 # Interpretation Setup###############################
@@ -88,8 +77,13 @@ def openNotes():
     try:
         # Try to open the text file and read its contents line by line
         with open("Python Code/feedback.txt", "r") as file:
-            for line in file:
-                notes_listbox.insert(tk.END, line.strip())  # Strip newline characters from each line
+            lines = file.readlines()  # Read all lines into a list
+            if not lines:
+                # If the file is empty, insert a message into the listbox
+                notes_listbox.insert(tk.END, "No feedback notes found.")
+            else:
+                for line in file:
+                    notes_listbox.insert(tk.END, line.strip())  # Strip newline characters from each line
     except FileNotFoundError:
         # If the file is not found, create it and display a message
         with open("Python Code/feedback.txt", "w") as file:
@@ -125,13 +119,13 @@ def addNote(number):
     # Check if the provided number is within the range of the notes array
     if 0 <= number < len(notes):
         # Open the feedback.txt file in append mode
-        with open("feedback.txt", "a") as file:
+        with open("Python Code/feedback.txt", "a") as file:
             # Get the content of the note from the notes array
             new_note = notes[number]
             # Write the new note to the file
             file.write(new_note + "\n")
         # Add the new note to the notes_listbox
-        notes_listbox.insert(tk.END, new_note)
+        #notes_listbox.insert(tk.END, new_note)
     else:
         print("Invalid note number. Please provide a valid number within the range of available notes.")
 
@@ -314,12 +308,21 @@ async def updateBuzzerState_F():
     global adapter, buzz_F,calibratedOutput_L, calibratedOutput_R, output_F
     if (calibratedOutput_L[2] > 0 and output_F[2] > calibratedOutput_L[2]):
         buzz_F = True
+        if writeCnt == 1:
+            addNote(16)
+            writeCnt = 0
     elif (calibratedOutput_L[2] < 0 and output_F[2] < calibratedOutput_L[2]):
         buzz_F = True
+        if writeCntL == 1:
+            addNote(17)
+            writeCntL = 0
     elif (calibratedOutput_R[2] > 0 and output_F[2] > calibratedOutput_R[2]):
         buzz_F = True
     elif (calibratedOutput_R[2] < 0 and output_F[2] < calibratedOutput_R[2]):
         buzz_F = True
+        if writeCntH == 1:
+            addNote(11)
+            writeCntH = 0
     else:
         buzz_F = False
     return

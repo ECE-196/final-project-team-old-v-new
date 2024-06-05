@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 6/5/204
+### Contributors
+1. Allen Keng
+### Added
+None
+### Changed
+Quick fix main_v3
+### Removed
+None
+
 ## 6/2/204
 ### Contributors
 1. Allen Keng

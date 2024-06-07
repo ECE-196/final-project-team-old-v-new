@@ -1,4 +1,13 @@
 # CHANGELOG
+## 6/5/204
+### Contributors
+1. Allen Keng
+### Added
+Index.html with our website index code : Added our calculation code explanations as requested.
+### Changed
+Quick fix main_v3
+### Removed
+None
 
 ## 6/5/204
 ### Contributors

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<!-- Coding by TheTripleS |   -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Triple S</title>
+
+    <!-- Swiper JS CSS-->
+    <link rel="stylesheet" href="css/swiper-bundle.min.css">
+
+    <!-- Scroll Reveal -->
+    <link rel="stylesheet" href="css/scrollreveal.min.js">
+
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+        
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+<!-- Header -->
+    <header class="header">
+            <nav class="nav container flex">
+                    <a href="#" class="logo-content flex">
+                        <span class="logo-text" style="color: black;">Triple S</span>
+                    </a>
+
+                    <div class="menu-content">
+                            <ul class="menu-list flex">
+                                    <li><a href="#home" class="nav-link active-navlink" style="color: black;">Home</a></li>
+                                    <li><a href="#about" class="nav-link" style="color: black;">Project Overview</a></li>
+                                    <li><a href="#menu" class="nav-link" style="color: black;">Designs and Production</a></li>
+                                    <li><a href="#us" class="nav-link" style="color: black;">The Creators</a></li>
+                            </ul>
+
+                            <div class="media-icons flex">
+                                    <a href="https://www.facebook.com"><i class='bx bxl-facebook'></i></a>
+                                    <a href="https://twitter.com/i/flow/login"><i class='bx bxl-twitter' ></i></a>
+                                    <a href="https://www.instagram.com/accounts/login"><i class='bx bxl-instagram-alt' ></i></a>
+                                    <a href="https://github.com/login"><i class='bx bxl-github'></i></a>
+                                    <a href="https://www.youtube.com/login"><i class='bx bxl-youtube'></i></a>
+                            </div>
+
+                            <i class='bx bx-x navClose-btn'></i>
+                        </div>
+                        
+                        <div class="contact-content flex">
+                                <img class="small-image" src="Images/UCSDLogo_JSOE_BlueGold.jpg" alt="drawing"/>
+                        </div>
+
+                        <i class='bx bx-menu navOpen-btn'></i>
+                </nav>
+        
+    </header>
+
+<!-- Home Section -->
+    <main>
+        <section class="home" id="home">
+                <div class="home-content">
+                        <div class="swiper mySwiper">
+                                <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                                <img src="Images/BoardView.png" alt="" class="home-img">
+
+                                                <div class="home-details">
+                                                        <div class="home-text">
+                                                                
+                                                                <h2 class="homeTitle">Snowboard Support <br>System</h2>
+                                                                <h4 class="homeSubtitle">by Allen Keng, John Mamola, Bran Zhang for ECE 196 Spring 2024</h4>
+                                                        </div>
+
+                                                        <a href="#about" class="button">Explore</a>
+                                                </div>
+                                        </div>
+
+                                        <div class="swiper-slide">
+                                                <img src="Images/pcb front.jpg" alt="" class="home-img">
+
+                                                <div class="home-details">
+                                                        <div class="home-text">
+                                                                <h4 class="homeSubtitle">We put Spy vs Spy, our team logo over it.</h4>
+                                                                <h2 class="homeTitle">Top View of <br>Our PCB</h2>
+                                                        </div>
+
+                                                        <button class="button">Explore</button>
+                                                </div>
+                                        </div>
+
+                                        <div class="swiper-slide">
+                                                <img src="Images/CasePadding.jpg" alt="" class="home-img">
+
+                                                <div class="home-details">
+                                                        <div class="home-text">
+                                                                <h4 class="homeSubtitle">We padded it with foam to keep it from moving inside the enclosure.</h4>
+                                                                <h2 class="homeTitle">Enclosure<br> Setup</h2>
+                                                        </div>
+
+                                                        <button class="button">Explore</button>
+                                                </div>
+                                        </div>
+
+                                        <div class="swiper-slide">
+                                                <img src="Images/Breadboard_testing.jpg" alt="" class="home-img">
+
+                                                <div class="home-details">
+                                                        <div class="home-text">
+                                                                <h4 class="homeSubtitle">We used a breadboard and jumper wires to connect everything.</h4>
+                                                                <h2 class="homeTitle">Initial <br> Prototyping</h2>
+                                                        </div>
+
+                                                        <button class="button">Explore</button>
+                                                </div>
+                                        </div>
+                                </div>
+
+                                <div class="swiper-button-next swiper-navBtn"></div>
+                                <div class="swiper-button-prev swiper-navBtn"></div>
+                                <div class="swiper-pagination"></div>
+                        </div>
+                </div>
+        </section>
+
+    
+<!-- About Section -->
+        <section class="sectionabout" id="about">
+                <div class="about-content container">
+                        <div class="about-imageContent">
+                                <img src="Images/TeamOldvNew.jpg" alt="" class="about-img">
+
+                                <div class="aboutImg-textBox">
+                                        <i class='bx bx-heart heart-icon flex'></i>
+                                        <p class="content-description">As we could not find time to go to the snow. We attached our device to a skateboard.</p>
+                                </div>
+                        </div>
+
+                        <div class="about-details">
+                                <div class="about-text">
+                                        <h4 class="content-subtitle"><i>Project Overview</i></h4>
+                                        <h2 class="content-title">Snowboard Support System </h2>
+                                        <p class="content-description">This project aims to create a simple snowboard support system solution 
+                                for helping beginners who may encounter injuries and struggle to identify areas for improvement on their own. 
+                                <br> <br> Our solution takes accelerometer input and exchanges data with python through the ESP32 microcontroller and bluetooth. 
+                                The data is interpreted to give real-time alerts to the user as well as tips.</p>
+
+                                        <ul class="about-lists flex">
+                                                <li class="about-list">Place. </li>
+                                                
+                                                <li class="about-list">Use. </li>
+                                   
+                                                <li class="about-list">Improve.</li>
+                                        </ul>
+                                </div>
+
+                                <div class="about-buttons flex">
+                                        <a href="#us" class="button">About Us</a>
+                                        <a href="#" class="about-link flex">
+                                                <span class="link-text">see more</span>
+                                                <i class='bx bx-right-arrow-alt about-arrowIcon'></i>
+                                        </a>
+                                </div>
+                        </div>
+
+                </div>
+        </section>
+
+    
+<!-- Menu Section -->
+        <section class="section menu" id="menu">
+            <div class="menu-container container">
+                    <div class="meu-text">
+                            <h4 class="section-subtitle"><i>Our Creations</i></h4>
+                            <h2 class="section-title">Our Designs and Schematics</h2>
+                            <p class="section-description">
+                                Here is the link to our github storing all our code. <br>
+                                <a href="https://github.com/ECE-196/final-project-team-old-v-new" style="color: green;">https://github.com/ECE-196/final-project-team-old-v-new</a>
+                                <br> <br> 
+                                Below are the designs and schematics we printed for our project. 
+                            </p>
+                    </div>
+
+                    <div class="menu-content">
+                        <div class="slideshow-container">
+                                <div class="mySlides">
+                                        <h2 class="cyan_color">PCB Schematic</h2>
+                                        <img src="Images/PCBSchematic.png" style="width:100%;height:420px">
+                                </div>
+                                
+                                <div class="mySlides">
+                                        <h2 class="cyan_color">PCB Layout</h2>
+                                        <img src="Images/PCBLayout.png" style="width:100%;height:620px">
+                                </div>
+
+                                <div class="mySlides">
+                                        <h2 class="cyan_color">PCB 3D View</h2>
+                                        <img src="Images/3D_PCB.png" style="width:100%;height:620px">
+                                </div>
+                                
+                                <div class="mySlides">
+                                        <h2 class="cyan_color">Enclosure</h2>
+                                        <img src="Images/Case_Rev_0.png" style="width:100%;height:520px">
+                                </div>
+                                
+                                <!-- Add more Images as needed -->
+                                
+                                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                            </div>
+                    </div>
+                    <div class="slideshow-container2">
+                        <h2 class="section-title"><br> Our Calculations</h2>
+                        <div class="mySlides2">
+                                <h2 class="cyan_color">Setting up Calibration offsets</h2>
+                                <img src="Images/CalibrationCalc.png">
+                        </div>
+
+                        <div class="mySlides2">
+                                <h2 class="cyan_color">Pitch, Roll, Yaw and Velocity Calculations</h2>
+                                <img src="Images/PitchYawRollCalc.png" style="margin-left:20rem; width:60%;height:60%">
+                                <img src="Images/VelocityCalc.png" style="margin-left:20rem;width:60%;height:60%">
+                        </div>
+                        <a class="prev2" onclick="plusSlides2(-1)">&#10094;</a>
+                        <a class="next2" onclick="plusSlides2(1)">&#10095;</a>
+                </div>
+                </div>
+
+                </div>
+            </div>
+        </section>
+
+    
+<!-- Brand Section -->
+        <section class="section brand">
+            <div class="brand-container container">
+                    <h4 class="section-subtitle"><i>Our Product Video<br> </i>
+                        <iframe src="https://drive.google.com/file/d/1fDc4kycSzAYj3rkfcbKSS9gLbB0UZWoC/preview" 
+                        width="640" height="480" allow="autoplay"></iframe>
+                </h4>
+                        
+            </div>
+        </section>
+
+    
+<!-- Reviews Section -->
+        <section class="section review" id="us">
+            <div class="review-container container">
+                    <div class="review-text">
+                            <h4 class="section-subtitle"><i>About Us</i></h4>
+                            <h2 class="section-title">Who We Are.</h2>
+                            <p class="section-description">
+                                Team Old v New
+                            </p>
+                    </div>
+
+                    <div class="tesitmonial swiper mySwiper">
+                            <div class="swiper-wrapper">
+                                    <div class="testi-content swiper-slide flex">
+                                            <img src="Images/TeamPhoto.jpg" alt="" class="review-img">
+                                            <p class="review-quote">Our differences in age and knowledge make our ideas whole.</p>
+                                            <i class='bx bxs-quote-alt-left quote-icon'></i>
+
+                                            <div class="testi-personDetails flex">
+                                                <span class="name">Allen Keng, John Mamola, Bran Zhang</span>
+                                                <span class="job">ECE 196 Students</span>
+                                        </div>
+                                    </div>
+                                    <div class="testi-content swiper-slide flex">
+                                            <img src="Images/john.jpg" alt="" class="review-img2">
+                                            <p class="review-quote">Our snowboarding expert who provides us insights on what we need to keep track of and help beginners improve. The hardware controller.</p>
+                                            <i class='bx bxs-quote-alt-left quote-icon'></i>
+
+                                            <div class="testi-personDetails flex">
+                                                    <span class="name">John Mamola</span>
+                                                    <span class="job">Major: Electrical Engineer</span>
+                                            </div>
+                                    </div>
+                                    <div class="testi-content swiper-slide flex">
+                                            <img src="Images/bran2.jpg" alt="" class="review-img2">
+                                            <p class="review-quote">Our software mastermind, writing our python interface and accelerometer interpreter. Our Chronicler. </p>
+                                            <i class='bx bxs-quote-alt-left quote-icon'></i>
+
+                                            <div class="testi-personDetails flex">
+                                                    <span class="name">Bran Zhang</span>
+                                                    <span class="job">Major: Computer Engineer</span>
+                                            </div>
+                                    </div>
+                                    <div class="testi-content swiper-slide flex">
+                                        <img src="Images/allen.jpg" alt="" class="review-img2">
+                                        <p class="review-quote">Our designer and guiding point in software and presentation. Worked on the foundation of our code and debugging.  </p>
+                                        <i class='bx bxs-quote-alt-left quote-icon'></i>
+
+                                        <div class="testi-personDetails flex">
+                                                <span class="name">Allen Keng</span>
+                                                <span class="job">Major: Computer Engineer</span>
+                                        </div>
+                                </div>
+                                </div>
+                                <div class="swiper-button-next swiper-navBtn"></div>
+                                <div class="swiper-button-prev swiper-navBtn"></div>
+                                <div class="swiper-pagination"></div>
+                    </div>
+            </div>
+        </section>
+
+    
+<!-- Newsletter Section -->
+        <section class="section newsletter">
+            <div class="newletter-container container">
+                <a href="#" class="logo-content flex">
+                        <span class="logo-text">Our Product Presentation</span>
+                    </a>
+                    <div class = "presentation"> Click on the image to go to the presentation.
+                        <a href="https://docs.google.com/presentation/d/125_aa0GbUy4Ky7Mp8ynJaOVMUZrwPOErVD9u8eSD7Zc/edit#slide=id.g1980df8add6_0_5350">
+                                <img src="Images/Tutorial.png"/>
+                        </a>
+                    </div> 
+
+                    <div class="references">
+                        <h2 class="wah">Our References</h2>
+                        <ul>
+                            <li>Connections:
+                                <ul><!-- start of nested list-->
+                                    <li><a href="https://randomnerdtutorials.com/esp32-mpu-6050-accelerometer-gyroscope-arduino/">https://randomnerdtutorials.com/esp32-mpu-6050-accelerometer-gyroscope-arduino/</a></li>
+                                    <ul><!-- start of nested list-->
+                                        <li>Figuring out the pins we were going to connect to while designing PCB </li>
+                                    </ul><!--end of nested list-->
+                                    <li><a href="https://bleak.readthedocs.io/en/latest/api/client.html">https://bleak.readthedocs.io/en/latest/api/client.html</a></li>
+                                    <ul><!-- start of nested list-->
+                                        <li> Making python act as a BLE receiver. </li>
+                                    </ul><!--end of nested list-->
+                                </ul><!--end of nested list-->
+                            </li>
+                            <li>I2C Communication:
+                                <ul><!-- start of nested list-->
+                                    <li><a href="https://randomnerdtutorials.com/esp32-i2c-communication-arduino-ide/">https://randomnerdtutorials.com/esp32-i2c-communication-arduino-ide/</a></li>
+                                    <ul><!-- start of nested list-->
+                                        <li> Understanding how to read values from an I2C device via “wire” transmission. </li>
+                                    </ul><!--end of nested list-->
+                                </ul><!--end of nested list-->
+                            </li>
+                            <li>Velocity Calculations:
+                                <ul><!-- start of nested list-->
+                                    <li><a href="https://arduino.stackexchange.com/questions/22798/can-i-measure-velocity-from-an-accelerometer-how-accurately">https://arduino.stackexchange.com/questions/22798/can-i-measure-velocity-from-an-accelerometer-how-accurately</a></li>
+                                    <ul><!-- start of nested list-->
+                                        <li> Understanding how to use instantaneous acceleration to find velocity. </li>
+                                    </ul><!--end of nested list-->
+                                </ul><!--end of nested list-->
+                            </li>
+                        </ul>
+                    </div>
+
+            </div>
+        </section>
+        
+    
+<!-- Footer Section -->
+        <footer class="section footer">
+            <div class="footer-container container">
+                    <div class="footer-content">
+                        <a href="#" class="logo-content flex">
+                                <span class="logo-text">Snowboard Support System.</span>
+                            </a>
+
+                            <p class="content-description">Prototyping to make a difference for beginners.</p>
+
+                            <div class="footer-location flex">
+                                <i class='bx bx-map map-icon'></i>
+                                
+                                <div class="location-text">
+                                        9500 Gilman Dr, La Jolla, CA 92093
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="footer-linkContent">
+                            <ul class="footer-links">
+                                    <h4 class="footerLinks-title">Support</h4>
+
+                                    <li><a href="#us" class="footer-link">About Us</a></li>
+                                    <li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="footer-link">Donate</a></li>
+                            </ul>
+                    </div>
+            </div>
+            <div class="footer-copyRight">&#169; TheTripleS. All rights reserved</div>
+        </footer>
+
+<!-- Scroll Up -->
+        <a href="#home" class="scrollUp-btn flex">
+                <i class='bx bx-up-arrow-alt scrollUp-icon'></i>
+        </a>
+
+</main>
+
+<!-- Swiper JS -->
+<script src="js/swiper-bundle.min.js"></script>
+
+<!-- Scroll Reveal -->
+<script src="js/scrollreveal.js"></script>
+
+<!-- JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>
